@@ -65,3 +65,7 @@ GitHub Actions runs pipeline + tests on push/PR:
 
 ## Stack Coverage Extension
 - Planned gap-coverage work is tracked in `STACK_COVERAGE_PLAN.md`.
+
+## Platform Parity Artifacts
+- Snowflake SQL equivalents: `integrations/snowflake/`
+- Databricks/Spark parity job: `integrations/databricks/`, `spark_jobs/lakehouse_parity_job.py`
