@@ -1,4 +1,4 @@
-# signal-lakehouse
+# lakehouse-analytics-platform
 
 End-to-end analytics engineering project using synthetic product, billing, and support datasets.
 
