@@ -26,3 +26,9 @@ pytest -q
 ```
 
 Outputs are written to `data/exports/`.
+
+## Development Trail
+- Roadmap: `ROADMAP.md`
+- Changelog: `CHANGELOG.md`
+- Proof mapping: `PROOF.md`
+- Resume bullets: `RESUME_BULLETS.md`
