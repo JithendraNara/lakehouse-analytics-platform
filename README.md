@@ -2,6 +2,11 @@
 
 End-to-end analytics engineering project using synthetic product, billing, and support datasets.
 
+## Role Positioning
+- Primary fit: Data Analyst, Analytics Engineer, Data Engineer
+- Showcase focus: SQL modeling, pipeline orchestration, KPI analytics, quality checks
+- Resume mapping: see `PROOF.md` and `RESUME_BULLETS.md`
+
 ## Goals
 - Build medallion-style data pipeline (raw -> staged -> marts).
 - Provide KPI outputs for BI tools.
@@ -9,14 +14,15 @@ End-to-end analytics engineering project using synthetic product, billing, and s
 
 ## Stack
 - Python, SQL, SQLite (local warehouse)
-- Optional portability notes for Snowflake/Databricks/ADF/Airflow
+- Portability notes for Snowflake/Databricks/ADF/Airflow
 
 ## Quick Start
 ```bash
-python3 -m venv .venv
+python3 -m venv --clear .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt pytest
 python -m pipeline.run_all
+pytest -q
 ```
 
 Outputs are written to `data/exports/`.
