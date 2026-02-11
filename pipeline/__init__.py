@@ -1,1 +1,1 @@
-"""signal-lakehouse pipeline package."""
+"""lakehouse-analytics-platform pipeline package."""
