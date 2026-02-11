@@ -1,0 +1,9 @@
+.venv/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# Keep exports for demo evidence, ignore raw/generated internals
+data/raw/*.csv
+data/staged/*
+data/marts/*

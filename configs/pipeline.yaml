@@ -1,0 +1,9 @@
+pipeline:
+  random_seed: 42
+  days_back: 120
+  n_users: 3500
+  avg_events_per_user: 26
+  avg_tickets_per_user: 0.8
+  reset_database: true
+  export_formats:
+    - csv

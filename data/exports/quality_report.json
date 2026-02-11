@@ -1,0 +1,32 @@
+[
+  {
+    "check": "duplicate_user_ids",
+    "fail_count": 0,
+    "threshold": 0,
+    "status": "PASS"
+  },
+  {
+    "check": "null_event_timestamp",
+    "fail_count": 0,
+    "threshold": 0,
+    "status": "PASS"
+  },
+  {
+    "check": "negative_payment_amount",
+    "fail_count": 0,
+    "threshold": 0,
+    "status": "PASS"
+  },
+  {
+    "check": "daily_kpi_not_empty",
+    "fail_count": 0,
+    "threshold": 0,
+    "status": "PASS"
+  },
+  {
+    "check": "conversion_rate_range",
+    "fail_count": 69,
+    "threshold": 0,
+    "status": "FAIL"
+  }
+]

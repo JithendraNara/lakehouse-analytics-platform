@@ -1,0 +1,3 @@
+experiment_name,experiment_variant,users_exposed,users_converted,conversion_rate,avg_revenue_per_user
+new_onboarding,A,3500,2878,0.8223,132.38
+new_onboarding,B,3500,2878,0.8223,132.38
