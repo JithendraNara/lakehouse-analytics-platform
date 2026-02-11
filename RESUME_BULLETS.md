@@ -9,3 +9,4 @@
 - Orchestrated end-to-end Python + SQL transformation workflows with reproducible artifact generation. (Proof: `L1`)
 - Designed quality gates for duplicate keys, null timestamps, and metric-range constraints before downstream consumption. (Proof: `L2`)
 - Created Snowflake SQL and Databricks/Spark parity artifacts to support warehouse migration and multi-platform execution. (Proof: `L4`)
+- Added Azure Data Factory orchestration templates, AWS/Azure deployment runbooks, and R-based KPI statistical checks to broaden production-readiness evidence. (Proof: `L5`)

@@ -1,0 +1,147 @@
+{
+  "name": "pl_lakehouse_analytics_orchestrator",
+  "properties": {
+    "description": "Template Azure Data Factory pipeline for the lakehouse analytics workflow.",
+    "folder": {
+      "name": "portfolio/lakehouse"
+    },
+    "parameters": {
+      "adlsRawContainer": {
+        "type": "String",
+        "defaultValue": "raw"
+      },
+      "adlsCuratedContainer": {
+        "type": "String",
+        "defaultValue": "curated"
+      },
+      "triggerDate": {
+        "type": "String",
+        "defaultValue": "@{formatDateTime(utcNow(), 'yyyy-MM-dd')}"
+      }
+    },
+    "variables": {
+      "sourceTables": {
+        "type": "Array"
+      }
+    },
+    "activities": [
+      {
+        "name": "SetSourceTables",
+        "type": "SetVariable",
+        "dependsOn": [],
+        "typeProperties": {
+          "variableName": "sourceTables",
+          "value": [
+            "users",
+            "events",
+            "payments",
+            "support_tickets"
+          ]
+        }
+      },
+      {
+        "name": "CopyRawCsvToBronze",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "SetSourceTables",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "isSequential": false,
+          "items": "@variables('sourceTables')",
+          "activities": [
+            {
+              "name": "CopyOneTable",
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "DelimitedTextSource"
+                },
+                "sink": {
+                  "type": "DelimitedTextSink"
+                }
+              },
+              "inputs": [
+                {
+                  "referenceName": "ds_portfolio_raw_csv",
+                  "type": "DatasetReference",
+                  "parameters": {
+                    "container": "@pipeline().parameters.adlsRawContainer",
+                    "fileName": "@concat(item(), '.csv')"
+                  }
+                }
+              ],
+              "outputs": [
+                {
+                  "referenceName": "ds_portfolio_bronze_csv",
+                  "type": "DatasetReference",
+                  "parameters": {
+                    "container": "@pipeline().parameters.adlsCuratedContainer",
+                    "folderPath": "@concat('bronze/', item())",
+                    "fileName": "@concat('dt=', pipeline().parameters.triggerDate, '.csv')"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "RunDatabricksParityJob",
+        "type": "DatabricksSparkPython",
+        "dependsOn": [
+          {
+            "activity": "CopyRawCsvToBronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "pythonFile": "dbfs:/portfolio/lakehouse_parity_job.py",
+          "parameters": [
+            "--run-date",
+            "@pipeline().parameters.triggerDate"
+          ]
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_az_databricks",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "RunSnowflakeMartSql",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "RunDatabricksParityJob",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": "CALL MARTS.SP_REFRESH_DAILY_KPIS(@{pipeline().parameters.triggerDate});",
+              "type": "Query"
+            }
+          ]
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_snowflake_warehouse",
+          "type": "LinkedServiceReference"
+        }
+      }
+    ],
+    "annotations": [
+      "portfolio-template",
+      "lakehouse-analytics-platform"
+    ]
+  },
+  "type": "Microsoft.DataFactory/factories/pipelines"
+}

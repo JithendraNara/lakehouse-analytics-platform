@@ -6,3 +6,4 @@
 | L2 | Implemented automated data quality checks with machine-readable outputs. | `pipeline/quality.py`, `data/exports/quality_report.json` | 5 checks run with pass/fail statuses |
 | L3 | Delivered BI-ready KPI exports for dashboard consumption. | `pipeline/exports.py`, `data/exports/daily_kpis.csv` | Daily KPI table exported with conversion and revenue metrics |
 | L4 | Added Snowflake and Databricks/Spark parity artifacts for cloud-warehouse migration readiness. | `integrations/snowflake/*.sql`, `integrations/databricks/*`, `spark_jobs/lakehouse_parity_job.py` | SQL + Spark parity paths documented and versioned |
+| L5 | Added orchestration, cloud runtime, and statistical analysis assets for broader platform evidence. | `orchestration/adf/pipeline.json`, `docs/deployment/*.md`, `notebooks/r_kpi_analysis.Rmd` | ADF handoff template + AWS/Azure runbooks + R-based KPI tests versioned |

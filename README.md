@@ -23,7 +23,10 @@ End-to-end analytics engineering project using synthetic product, billing, and s
 - Python, SQL, SQLite (local warehouse runtime)
 - Pandas + NumPy for synthetic generation and export handling
 - PyYAML configuration-driven runs
-- Portability notes for Snowflake/Databricks/ADF/Airflow in docs and roadmap
+- Snowflake + Databricks/Spark parity artifacts for multi-runtime portability
+- Azure Data Factory pipeline template for orchestration handoff
+- AWS + Azure deployment runbooks
+- R notebook for KPI trend and hypothesis analysis
 
 ## Repository Layout
 ```text
@@ -69,3 +72,6 @@ GitHub Actions runs pipeline + tests on push/PR:
 ## Platform Parity Artifacts
 - Snowflake SQL equivalents: `integrations/snowflake/`
 - Databricks/Spark parity job: `integrations/databricks/`, `spark_jobs/lakehouse_parity_job.py`
+- Azure Data Factory template: `orchestration/adf/pipeline.json`
+- AWS/Azure deployment runbooks: `docs/deployment/aws.md`, `docs/deployment/azure.md`
+- R statistical notebook: `notebooks/r_kpi_analysis.Rmd`

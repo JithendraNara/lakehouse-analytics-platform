@@ -1,0 +1,78 @@
+---
+title: "KPI Trend and Hypothesis Analysis"
+output: html_document
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(broom)
+
+exports_dir <- file.path("..", "data", "exports")
+daily <- read_csv(file.path(exports_dir, "daily_kpis.csv"), show_col_types = FALSE) %>%
+  mutate(metric_date = as.Date(metric_date))
+
+channel <- read_csv(file.path(exports_dir, "channel_performance.csv"), show_col_types = FALSE)
+```
+
+## 1) Revenue Trend
+
+```{r revenue-trend}
+trend_model <- lm(net_revenue_usd ~ as.numeric(metric_date), data = daily)
+tidy(trend_model)
+```
+
+```{r revenue-plot}
+ggplot(daily, aes(metric_date, net_revenue_usd)) +
+  geom_line(color = "#1f77b4", linewidth = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, color = "#d62728", linewidth = 0.6) +
+  labs(
+    title = "Daily Net Revenue Trend",
+    x = "Date",
+    y = "Net Revenue (USD)"
+  ) +
+  theme_minimal(base_size = 11)
+```
+
+## 2) Conversion Lift Test (Early vs Late Window)
+
+```{r conversion-test}
+split_date <- median(daily$metric_date, na.rm = TRUE)
+daily <- daily %>%
+  mutate(window = if_else(metric_date <= split_date, "early", "late"))
+
+test_result <- t.test(conversion_rate ~ window, data = daily)
+tidy(test_result)
+```
+
+## 3) Support Load vs Conversion Relationship
+
+```{r support-vs-conversion}
+correlation <- cor(daily$tickets_opened, daily$conversion_rate, use = "complete.obs")
+correlation
+```
+
+```{r support-conversion-plot}
+ggplot(daily, aes(tickets_opened, conversion_rate)) +
+  geom_point(alpha = 0.7, color = "#2ca02c") +
+  geom_smooth(method = "lm", se = FALSE, color = "#ff7f0e", linewidth = 0.6) +
+  labs(
+    title = "Support Volume vs Conversion Rate",
+    x = "Tickets Opened",
+    y = "Conversion Rate"
+  ) +
+  theme_minimal(base_size = 11)
+```
+
+## 4) Channel-Level Revenue Comparison
+
+```{r channel-summary}
+channel %>%
+  arrange(desc(net_revenue_usd)) %>%
+  select(acquisition_channel, signups, paying_users, paid_conversion_rate, net_revenue_usd, arpu)
+```
+
+## Conclusion
+- Use this notebook to demonstrate R-based statistical checks over production-style KPI exports.
+- Pair findings with SQL mart outputs and API alert thresholds for cross-layer validation.
