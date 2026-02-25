@@ -35,6 +35,8 @@ pipeline/               # Orchestration + generation + quality + exports
 sql/staging/            # Staging layer SQL
 sql/marts/              # Mart layer SQL
 data/exports/           # Generated KPI outputs + quality reports
+spark_jobs/             # Spark/Databricks jobs
+api/                    # REST API for real-time ingestion
 tests/                  # Smoke tests
 ```
 
@@ -48,6 +50,44 @@ pytest -q
 ```
 
 Outputs are written to `data/exports/`.
+
+## Financial Data Pipeline (Included)
+
+This repo includes a production-grade financial transaction processing pipeline:
+
+### Features
+- **Spark-based processing** — Handle 10M+ records with distributed computing
+- **Anomaly detection** — Flag unusual transactions (high amount, velocity, frequency)
+- **Batch aggregations** — Daily and merchant-level summaries
+- **REST API** — Real-time transaction ingestion
+- **Data generator** — Create 10M+ test records
+
+### Usage
+```bash
+# Generate 10M transactions
+python -m spark_jobs.financial.data_generator --count 10000000 --output data/transactions.csv
+
+# Run pipeline (requires Spark)
+spark-submit spark_jobs/financial/transaction_processor.py --input data/transactions.csv --output output/
+
+# Start API
+uvicorn api.main:app --reload
+```
+
+### API Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check |
+| POST | `/api/v1/ingest` | Ingest transaction |
+| POST | `/api/v1/ingest/batch` | Batch ingest |
+| GET | `/api/v1/anomalies` | List anomalies |
+
+### Anomaly Detection Rules
+- High Amount (>3 std deviations)
+- Velocity (>10 txns/minute)
+- Very High (> $10k)
+
+See `spark_jobs/financial/` for full implementation.
 
 ## Key Outputs
 - `data/exports/daily_kpis.csv`
